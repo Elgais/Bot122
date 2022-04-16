@@ -10,8 +10,8 @@ async def on_start_up(_):
 
 client.register_hendlers_client(dp)
 callback.register_hendlers_callback(dp)
-# fsmAdminMenu.register_handler_fsmAdminMenu(dp)
-fsmAdminGetUser.register_handler_fsmAdminGetUser(dp)
+fsmAdminMenu.register_handler_fsmAdminMenu(dp)
+# fsmAdminGetUser.register_handler_fsmAdminGetUser(dp)
 
 notification.register_hendlers_notification(dp)
 
