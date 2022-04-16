@@ -3,9 +3,11 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from .keyboards import cancel_markup
-from config import bot
+from config import bot, ADMIN
 from database import bot_db
+
 
 # States
 
@@ -70,6 +72,31 @@ async def cancel_reg(message:types.Message, state: FSMContext):
         await state.finish()
         await message.reply('OK')
 
+async def delete_data(message: types.Message):
+    if message.from_user.id == ADMIN:
+        results = await bot.sql_command_all(message)
+        for result in results:
+            await bot.send_photo(message.from_user.id, result[2], 
+                        caption=f'Name: {result[3]}\n'
+                                                 f'Surname: {result[4]}\n'
+                                                 f'Age: {result[5]}\n'
+                                                 f'Region: {result[6]}\n\n'
+                                                 f'{result[1]}',
+                                                 reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton(
+                                                     f'delete: {result[0]}',
+                                                     callback_data=f'delete: {result[0]}',
+
+                                                 )))
+        else: 
+            await message.answer('You not ADMIN !')
+
+async def complete_delete(call: types.CallbackQuery):
+    await bot_db.sql_command_delete(call.data.replace('delete: ', ''))
+    await call.answer(text=f'{call.data.replace('delete: ', ''},deleted...))
+
+
+
+
 
 def register_handler_fsmAdminGetUser(dp: Dispatcher):
     dp.register_message_handler(cancel_reg, state = "*", commands='cancel')
@@ -81,6 +108,7 @@ def register_handler_fsmAdminGetUser(dp: Dispatcher):
     dp.register_message_handler(load_surname, state =FSMAdmin.surname)
     dp.register_message_handler(load_age, state =FSMAdmin.age)
     dp.register_message_handler(load_region, state =FSMAdmin.region)
+    dp.register_message_handler(delete_data, commands=['delete'])
 
 
     
