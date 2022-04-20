@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram import types, Dispatcher
 from config import bot, dp, ADMIN
-from database import bot_db
+from database import bot_sb
 
 # @dp.message_handler(commands=['mem'])
 async def mem(message: types.Message):
@@ -69,7 +69,7 @@ async def ban(message: types.Message):
         await message.answer("Это работает только в группах!")
 
 async def show_random_user(message: types.Message):
-    await bot_db.sql_command_random(message)
+    await bot_sb.sql_command_random(message)
 
 
 def register_hendlers_client(dp: Dispatcher):

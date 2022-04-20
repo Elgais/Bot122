@@ -62,5 +62,3 @@ def register_handler_fsmAdminMenu(dp: Dispatcher):
     dp.register_message_handler(dow_tit, state= FSMAdmin.title)
     dp.register_message_handler(dow_desc, state= FSMAdmin.describe)
     dp.register_message_handler(dow_price, state= FSMAdmin.price)
-
-
