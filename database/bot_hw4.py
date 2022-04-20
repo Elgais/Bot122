@@ -8,18 +8,18 @@ def sql_create():
     cursor = db.cursor()
     if db:
         print("База данных подключена!")
-    db.execute("CREATE TABLE IF NOT EXISTS users"
+    db.execute("CREATE TABLE IF NOT EXISTS ports"
                "(photo TEXT, name TEXT, description TEXT, "
                "price INTEGER)")
     db.commit()
 
 async def sql_command_insert(state):
     async with state.proxy() as data:
-        cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?)", tuple(data.values()))
+        cursor.execute("INSERT INTO ports VALUES (?, ?, ?, ?)", tuple(data.values()))
         db.commit()
 
 async def sql_command_random(message):
-    result = cursor.execute("SELECT * FROM users").fetchall()
+    result = cursor.execute("SELECT * FROM ports").fetchall()
     r_d = random.randint(0, len(result)-1)
     await bot.send_photo(message.from_user.id, result[r_d][0],
                          caption=f"Name: {result[r_d][1]}\n"
@@ -27,10 +27,10 @@ async def sql_command_random(message):
                                  f"Price: {result[r_d][3]}")
 
 async def sql_command_all(message):
-    return cursor.execute("SELECT * FROM users").fetchall()
+    return cursor.execute("SELECT * FROM ports").fetchall()
 
 async def sql_command_delete(name):
-    cursor.execute("DELETE FROM users WHERE name == ?", (name,))
+    cursor.execute("DELETE FROM ports WHERE name == ?", (name,))
     db.commit()
 
 
